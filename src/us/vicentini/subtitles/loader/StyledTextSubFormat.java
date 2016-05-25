@@ -1,4 +1,4 @@
-package us.vicentini.loader;
+package us.vicentini.subtitles.loader;
 
 /**
  *

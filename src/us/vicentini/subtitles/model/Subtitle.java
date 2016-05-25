@@ -1,26 +1,36 @@
-package us.vicentini.model;
+package us.vicentini.subtitles.model;
 
 
 import java.util.LinkedList;
 
 
 /**
- *
+ * In memory subtitle representation.
+ * 
  * @author teras
  */
 public class Subtitle {
     
-    /** List of subtitles */
-    private LinkedList <SubEntry> sublist;
+    // List of subtitles 
+    private final LinkedList<SubEntry> sublist;
 
+    /**
+     * Empty Subtitle Constructor.
+     */
     public Subtitle() {
         sublist = new LinkedList<SubEntry>();
     }
     
+    /**
+     * Subtitle Constructor and copy the entries from the old subtitle.
+     * 
+     * @param old the original subtitle
+     */
     public Subtitle(Subtitle old) {
         
         sublist = new LinkedList<SubEntry>();
-        SubEntry newentry, oldentry;
+        SubEntry newentry;
+        SubEntry oldentry;
         for (int i = 0 ; i < old.size() ; i++ ) {
             oldentry = old.elementAt(i);
             newentry = new SubEntry(oldentry);
@@ -31,7 +41,8 @@ public class Subtitle {
     
     
     private double getMaxTime() {
-        double max, cur;
+        double max;
+        double cur;
         
         max = 0;
         for (int i = 0 ; i < sublist.size() ; i++) {

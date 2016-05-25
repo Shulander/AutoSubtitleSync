@@ -1,7 +1,7 @@
-package us.vicentini.sync;
+package us.vicentini.subtitles.sync;
 
-import us.vicentini.model.Subtitle;
-import us.vicentini.model.Time;
+import us.vicentini.subtitles.model.Subtitle;
+import us.vicentini.subtitles.model.Time;
 
 /**
  *

@@ -20,15 +20,15 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
-package us.vicentini.loader;
+package us.vicentini.subtitles.loader;
 
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import us.vicentini.model.SubEntry;
-import us.vicentini.model.Subtitle;
+import us.vicentini.subtitles.model.SubEntry;
+import us.vicentini.subtitles.model.Subtitle;
 
 /**
  *

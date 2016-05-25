@@ -1,8 +1,8 @@
-package us.vicentini.loader;
+package us.vicentini.subtitles.loader;
 
 import java.io.File;
 import java.io.IOException;
-import us.vicentini.model.Subtitle;
+import us.vicentini.subtitles.model.Subtitle;
 
 /**
  *

@@ -1,4 +1,4 @@
-package us.vicentini.model;
+package us.vicentini.subtitles.model;
 
 /**
  *

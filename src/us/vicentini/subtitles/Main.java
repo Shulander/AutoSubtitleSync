@@ -1,4 +1,4 @@
-package us.vicentini;
+package us.vicentini.subtitles;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
-import us.vicentini.loader.SubRip;
-import us.vicentini.model.SubEntry;
-import us.vicentini.model.Subtitle;
+
+import us.vicentini.subtitles.loader.SubRip;
+import us.vicentini.subtitles.model.Subtitle;
 
 /**
  *
@@ -37,12 +37,16 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
-        String inputSyncPathFile = "input\\legenda.eng.srt";
-        SubRip syncSub = new SubRip();
-        Subtitle synchronizedSub = syncSub.parse(fileRead(inputSyncPathFile));
+        String inputEngPathFile = "input\\legenda.eng.srt";
+        String inputPorPathFile = "input\\legenda.eng.srt";
+        SubRip engSubFormat = new SubRip();
+        Subtitle engSub = engSubFormat.parse(fileRead(inputEngPathFile));
+        
+        SubRip porSubFormat = new SubRip();
+        Subtitle porSub = porSubFormat.parse(fileRead(inputPorPathFile));
 //        synchronizedSub.split(new SubEntry());
-        synchronizedSub.applyCorrection(1, 1);
-        System.out.println(synchronizedSub.toString());
-        syncSub.produce(synchronizedSub, new File("output\\legenda.eng.srt") );
+        engSub.applyCorrection(1, 1);
+        System.out.println(engSub.toString());
+        engSubFormat.produce(engSub, new File("output\\legenda.eng.srt") );
     }
 }
