@@ -91,11 +91,15 @@ public class SubEntry implements Comparable<SubEntry> {
         }
     }
 
-    public boolean isInTime(double t) {
-        if (t >= start.toSeconds() && t <= finish.toSeconds()) {
+    public boolean isInTime(Time t) {
+        if (t.getMsecs() >= start.getMsecs() && t.getMsecs() <= finish.getMsecs()) {
             return true;
         }
         return false;
+    }
+    
+    public int deltaTime() {
+        return getFinishTime().getMsecs() - getStartTime().getMsecs();
     }
 
     @Override

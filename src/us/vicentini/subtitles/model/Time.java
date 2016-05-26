@@ -14,7 +14,7 @@ public class Time implements Comparable<Time> {
     public Time(double time) {
         setTime(time);
     }
-    
+
     public int getMsecs() {
         return msecs;
     }
@@ -43,14 +43,16 @@ public class Time implements Comparable<Time> {
     }
 
     public void addTime(double d) {
-        if (!isValid())
+        if (!isValid()) {
             return;
+        }
         setTime(toSeconds() + d);
     }
 
     public void recodeTime(double beg, double fac) {
-        if (!isValid())
+        if (!isValid()) {
             return;
+        }
         setTime((toSeconds() - beg) * fac + beg);
     }
 
@@ -76,8 +78,9 @@ public class Time implements Comparable<Time> {
             min = Short.parseShort(m);
             sec = Short.parseShort(s);
             flength = f.length();
-            if (flength < 3)
+            if (flength < 3) {
                 f = f + "000".substring(flength);
+            }
             milli = Short.parseShort(f);
             setTime(hour, min, sec, milli);
         } catch (NumberFormatException e) {
@@ -94,7 +97,7 @@ public class Time implements Comparable<Time> {
     }
 
     public void setTime(double time) {
-        setMilliSeconds((int)(time * 1000d+0.5d));
+        setMilliSeconds((int) (time * 1000d + 0.5d));
     }
 
     public void setTime(Time time) {
@@ -106,18 +109,23 @@ public class Time implements Comparable<Time> {
     }
 
     private void setMilliSeconds(int msecs) {
-        if (msecs < 0)
+        if (msecs < 0) {
             msecs = 0;
-        if (msecs > MAX_MILLI_TIME)
+        }
+        if (msecs > MAX_MILLI_TIME) {
             msecs = MAX_MILLI_TIME;
+        }
         this.msecs = msecs;
     }
 
+    @Override
     public int compareTo(Time t) {
-        if (msecs < t.msecs)
+        if (msecs < t.msecs) {
             return -1;
-        if (msecs > t.msecs)
+        }
+        if (msecs > t.msecs) {
             return 1;
+        }
         return 0;
     }
 
@@ -135,22 +143,27 @@ public class Time implements Comparable<Time> {
         time /= 60;
         hour = time;
 
-        if (hour < 10)
+        if (hour < 10) {
             res.append("0");
+        }
         res.append(hour);
         res.append(":");
-        if (min < 10)
+        if (min < 10) {
             res.append("0");
+        }
         res.append(min);
         res.append(":");
-        if (sec < 10)
+        if (sec < 10) {
             res.append("0");
+        }
         res.append(sec);
         res.append(",");
-        if (milli < 100)
+        if (milli < 100) {
             res.append("0");
-        if (milli < 10)
+        }
+        if (milli < 10) {
             res.append("0");
+        }
         res.append(milli);
         return res.toString();
     }
@@ -169,22 +182,26 @@ public class Time implements Comparable<Time> {
         time /= 60;
         hour = time;
 
-        if (hour < 10)
+        if (hour < 10) {
             res.append("0");
+        }
         res.append(hour);
         res.append(":");
-        if (min < 10)
+        if (min < 10) {
             res.append("0");
+        }
         res.append(min);
         res.append(":");
-        if (sec < 10)
+        if (sec < 10) {
             res.append("0");
+        }
         res.append(sec);
         res.append(":");
 
         frm = Math.round(milli * FPS / 1000f);
-        if (frm < 10)
+        if (frm < 10) {
             res.append("0");
+        }
         res.append(frm);
         return res.toString();
     }
@@ -196,10 +213,12 @@ public class Time implements Comparable<Time> {
     public double toSeconds() {
         return msecs / 1000d;
     }
+
     public String toString() {
         return getSeconds();
     }
+
     public void applyCorrection(double angular, double linear) {
-        msecs = (int) Math.round(msecs*angular + linear);
+        msecs = (int) Math.round(msecs * angular + linear);
     }
 }
