@@ -20,7 +20,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
-
 package us.vicentini.subtitles.loader;
 
 import java.util.regex.Matcher;
@@ -39,8 +38,8 @@ public class SubRip extends StyledTextSubFormat {
 
     static {
         pat = Pattern.compile(
-                "(?s)(\\d+)" + SPACE_PATTERN + NEW_LINE_PATTERN + "(\\d\\d):(\\d\\d):(\\d\\d),(\\d\\d\\d)" + SPACE_PATTERN + "-->"
-                + SPACE_PATTERN + "(\\d\\d):(\\d\\d):(\\d\\d),(\\d\\d\\d)" + SPACE_PATTERN + "(X1:\\d.*?)??" + NEW_LINE_PATTERN + "(.*?)" + NEW_LINE_PATTERN + NEW_LINE_PATTERN);
+            "(?s)(\\d+)" + SPACE_PATTERN + NEW_LINE_PATTERN + "(\\d\\d):(\\d\\d):(\\d\\d),(\\d\\d\\d)" + SPACE_PATTERN + "-->"
+            + SPACE_PATTERN + "(\\d\\d):(\\d\\d):(\\d\\d),(\\d\\d\\d)" + SPACE_PATTERN + "(X1:\\d.*?)??" + NEW_LINE_PATTERN + "(.*?)" + NEW_LINE_PATTERN + NEW_LINE_PATTERN);
 
     }
 
@@ -50,10 +49,17 @@ public class SubRip extends StyledTextSubFormat {
     }
 
     @Override
-    protected SubEntry getSubEntry(Matcher m) {
-        Time start = new Time(m.group(2), m.group(3), m.group(4), m.group(5));
-        Time finish = new Time(m.group(6), m.group(7), m.group(8), m.group(9));
-        SubEntry entry = new SubEntry(start, finish, m.group(11));
+    protected SubEntry getSubEntry(Matcher match) {
+        Time.TimeBuilder startTimeBuilder = new Time.TimeBuilder();
+        startTimeBuilder.setHour(match.group(2)).setMinutes(match.group(3))
+            .setSeconds(match.group(4)).setMilliseconds(match.group(5));
+        Time start = startTimeBuilder.build();
+
+        Time.TimeBuilder finishTimeBuilder = new Time.TimeBuilder();
+        finishTimeBuilder.setHour(match.group(6)).setMinutes(match.group(7))
+            .setSeconds(match.group(8)).setMilliseconds(match.group(9));
+        Time finish = finishTimeBuilder.build();
+        SubEntry entry = new SubEntry(start, finish, match.group(11));
         return entry;
     }
 

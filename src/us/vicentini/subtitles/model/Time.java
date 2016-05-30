@@ -4,42 +4,18 @@ package us.vicentini.subtitles.model;
  *
  * @author teras
  */
-public class Time implements Comparable<Time> {
+public class Time implements Comparable<Time>, Cloneable {
 
     protected float msecs = -1;
     public static final int MAX_TIME = 3600 * 24;   // in seconds
     public static final int MAX_MILLI_TIME = MAX_TIME * 1000;   // in seconds
 
-    /* Time in seconds */
-    public Time(double time) {
-        setTime(time);
+    private Time() {
+
     }
 
     public int getMsecs() {
         return Math.round(msecs);
-    }
-
-    /* Time in frames & FPS */
-    public Time(String frame, float fps) {
-        try {
-            setTime(Double.parseDouble(frame) / fps);
-        } catch (NumberFormatException e) {
-            invalidate();
-        }
-    }
-
-    /* Time in hours, minutes, seconds & milliseconds */
-    public Time(String h, String m, String s, String f) {
-        setTime(h, m, s, f);
-    }
-
-    /* Time in hours, minutes, seconds & frames */
-    public Time(String h, String m, String s, String f, float fps) {
-        setTime(h, m, s, f, fps);
-    }
-
-    public Time(Time time) {
-        setTime(time);
     }
 
     public void addTime(double d) {
@@ -70,24 +46,6 @@ public class Time implements Comparable<Time> {
         }
     }
 
-    private void setTime(String h, String m, String s, String f) {
-        short hour, min, sec, milli;
-        int flength;
-        try {
-            hour = Short.parseShort(h);
-            min = Short.parseShort(m);
-            sec = Short.parseShort(s);
-            flength = f.length();
-            if (flength < 3) {
-                f = f + "000".substring(flength);
-            }
-            milli = Short.parseShort(f);
-            setTime(hour, min, sec, milli);
-        } catch (NumberFormatException e) {
-            invalidate();
-        }
-    }
-
     public boolean isValid() {
         return getMsecs() >= 0;
     }
@@ -104,11 +62,11 @@ public class Time implements Comparable<Time> {
         msecs = time.getMsecs();
     }
 
-    private void setTime(short h, short m, short s, short f) {
+    private void setTime(long h, long m, long s, long f) {
         setMilliSeconds((h * 3600 + m * 60 + s) * 1000 + f);
     }
 
-    private void setMilliSeconds(int msecs) {
+    private void setMilliSeconds(long msecs) {
         if (msecs < 0) {
             msecs = 0;
         }
@@ -135,15 +93,15 @@ public class Time implements Comparable<Time> {
         int milli;
         milli = getMsecs() % 1000;
         time = getMsecs() / 1000;
-        
+
         int sec;
         sec = time % 60;
         time /= 60;
-        
+
         int min;
         min = time % 60;
         time /= 60;
-        
+
         int hour = time;
 
         StringBuilder res = new StringBuilder();
@@ -200,11 +158,92 @@ public class Time implements Comparable<Time> {
         return msecs / 1000d;
     }
 
+    @Override
     public String toString() {
         return getSeconds();
     }
 
     public void applyCorrection(double angular, double linear) {
         msecs = (int) Math.round(msecs * angular + linear);
+    }
+
+    @Override
+    public Time clone() {
+        Time returnValue;
+        try {
+            returnValue = (Time) super.clone();
+        } catch (CloneNotSupportedException ex) {
+            returnValue = new Time();
+            returnValue.setMilliSeconds(this.getMsecs());
+        }
+        return returnValue;
+    }
+
+    public static class TimeBuilder {
+
+        short hour;
+        short min;
+        short seconds;
+        long milliseconds;
+
+        /**
+         * Basic Builder Constructor.
+         */
+        public TimeBuilder() {
+            hour = 0;
+            min = 0;
+            seconds = 0;
+            milliseconds = 0;
+        }
+
+        public TimeBuilder setHour(String strHour) {
+            return setHour(Short.parseShort(strHour));
+        }
+
+        public TimeBuilder setHour(short hour) {
+            this.hour = hour;
+            return this;
+        }
+
+        public TimeBuilder setMinutes(String strMinutes) {
+            return setMinutes(Short.parseShort(strMinutes));
+        }
+
+        public TimeBuilder setMinutes(short minutes) {
+            this.min = minutes;
+            return this;
+        }
+
+        public TimeBuilder setSeconds(String strMinutes) {
+            return setSeconds(Short.parseShort(strMinutes));
+        }
+
+        public TimeBuilder setSeconds(short seconds) {
+            this.seconds = seconds;
+            return this;
+        }
+
+        public TimeBuilder setMilliseconds(final String strMilliseconds) {
+            int flength = strMilliseconds.length();
+            String localStrMilliseconds;
+            if (flength < 3) {
+                localStrMilliseconds = strMilliseconds + "000".substring(flength);
+            } else {
+                localStrMilliseconds = strMilliseconds;
+            }
+            return setMilliseconds(Short.parseShort(localStrMilliseconds));
+        }
+
+        public TimeBuilder setMilliseconds(long milliseconds) {
+            this.milliseconds = milliseconds;
+            return this;
+        }
+
+        public Time build() {
+            Time returnValue = new Time();
+            returnValue.setTime(hour, min, seconds, milliseconds);
+            return returnValue;
+        }
+
     }
 }

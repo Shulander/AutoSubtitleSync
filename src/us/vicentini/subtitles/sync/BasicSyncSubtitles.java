@@ -9,7 +9,10 @@ import us.vicentini.subtitles.model.Time;
  */
 public class BasicSyncSubtitles extends SyncSubtitles {
 
-    Time synccedA, synccedB, dessynccedA, dessynccedB;
+    private Time synccedA;
+    private Time synccedB;
+    private Time dessynccedA;
+    private Time dessynccedB;
 
     public BasicSyncSubtitles(Subtitle subSincced, Subtitle subDesSinc) {
         super(subSincced, subDesSinc);
@@ -34,9 +37,10 @@ public class BasicSyncSubtitles extends SyncSubtitles {
     @Override
     public Subtitle synchronize() {
         Subtitle newSubtitle = new Subtitle(subDesSinc);
-        
-        int angular = (synccedB.getMsecs() - synccedA.getMsecs()) / (dessynccedB.getMsecs() - dessynccedA.getMsecs());
-        int linear = synccedB.getMsecs() - angular * dessynccedB.getMsecs();
+
+        float angular = (synccedB.getMsecs() - synccedA.getMsecs())
+            / (float) (dessynccedB.getMsecs() - dessynccedA.getMsecs());
+        float linear = synccedB.getMsecs() - angular * dessynccedB.getMsecs();
 
         newSubtitle.applyCorrection(angular, linear);
 

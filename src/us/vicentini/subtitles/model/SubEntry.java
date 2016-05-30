@@ -6,20 +6,14 @@ package us.vicentini.subtitles.model;
  */
 public class SubEntry implements Comparable<SubEntry> {
 
-    private Time start, finish;
+    private Time start;
+    private Time finish;
     private String subtext;
     private int mark;
 
-    public SubEntry(double start, double finish, String line) {
-        this.start = new Time(start);
-        this.finish = new Time(finish);
-        this.subtext = line;
-        mark = 0;
-    }
-
     public SubEntry(Time start, Time finish, String line) {
-        this.start = new Time(start);
-        this.finish = new Time(finish);
+        this.start = start.clone();
+        this.finish = finish.clone();
         this.subtext = line;
         mark = 0;
     }
@@ -29,10 +23,7 @@ public class SubEntry implements Comparable<SubEntry> {
         mark = old.mark;
     }
 
-    public SubEntry() {
-        this(0, 0, "");
-    }
-
+    @Override
     public int compareTo(SubEntry other) {
         return start.compareTo(other.start);
     }
