@@ -6,7 +6,7 @@ package us.vicentini.subtitles.model;
  */
 public class Time implements Comparable<Time> {
 
-    protected int msecs = -1;
+    protected float msecs = -1;
     public static final int MAX_TIME = 3600 * 24;   // in seconds
     public static final int MAX_MILLI_TIME = MAX_TIME * 1000;   // in seconds
 
@@ -16,7 +16,7 @@ public class Time implements Comparable<Time> {
     }
 
     public int getMsecs() {
-        return msecs;
+        return Math.round(msecs);
     }
 
     /* Time in frames & FPS */
@@ -89,7 +89,7 @@ public class Time implements Comparable<Time> {
     }
 
     public boolean isValid() {
-        return msecs >= 0;
+        return getMsecs() >= 0;
     }
 
     private void invalidate() {
@@ -101,7 +101,7 @@ public class Time implements Comparable<Time> {
     }
 
     public void setTime(Time time) {
-        msecs = time.msecs;
+        msecs = time.getMsecs();
     }
 
     private void setTime(short h, short m, short s, short f) {
@@ -120,89 +120,75 @@ public class Time implements Comparable<Time> {
 
     @Override
     public int compareTo(Time t) {
-        if (msecs < t.msecs) {
+        if (getMsecs() < t.getMsecs()) {
             return -1;
         }
-        if (msecs > t.msecs) {
+        if (getMsecs() > t.getMsecs()) {
             return 1;
         }
         return 0;
     }
 
     public String getSeconds() {
-        StringBuffer res;
-        int hour, min, sec, milli;
 
-        res = new StringBuffer();
         int time;
-        milli = msecs % 1000;
-        time = msecs / 1000;
+        int milli;
+        milli = getMsecs() % 1000;
+        time = getMsecs() / 1000;
+        
+        int sec;
         sec = time % 60;
         time /= 60;
+        
+        int min;
         min = time % 60;
         time /= 60;
-        hour = time;
+        
+        int hour = time;
 
-        if (hour < 10) {
-            res.append("0");
-        }
-        res.append(hour);
+        StringBuilder res = new StringBuilder();
+        res.append(String.format("%02d", hour));
         res.append(":");
-        if (min < 10) {
-            res.append("0");
-        }
-        res.append(min);
+
+        res.append(String.format("%02d", min));
         res.append(":");
-        if (sec < 10) {
-            res.append("0");
-        }
-        res.append(sec);
+
+        res.append(String.format("%02d", sec));
         res.append(",");
-        if (milli < 100) {
-            res.append("0");
-        }
-        if (milli < 10) {
-            res.append("0");
-        }
-        res.append(milli);
+
+        res.append(String.format("%03d", milli));
         return res.toString();
     }
 
-    public String getSecondsFrames(float FPS) {
-        StringBuffer res;
-        int hour, min, sec, milli, frm;
-
-        res = new StringBuffer();
+    public String getSecondsFrames(float fps) {
         int time;
-        milli = msecs % 1000;
-        time = msecs / 1000;
+        int milli;
+        milli = getMsecs() % 1000;
+
+        time = getMsecs() / 1000;
+        int sec;
         sec = time % 60;
+
         time /= 60;
+        int min;
         min = time % 60;
+
         time /= 60;
-        hour = time;
+        int hour = time;
 
-        if (hour < 10) {
-            res.append("0");
-        }
-        res.append(hour);
-        res.append(":");
-        if (min < 10) {
-            res.append("0");
-        }
-        res.append(min);
-        res.append(":");
-        if (sec < 10) {
-            res.append("0");
-        }
-        res.append(sec);
+        StringBuilder res = new StringBuilder();
+        res.append(String.format("%02d", hour));
         res.append(":");
 
-        frm = Math.round(milli * FPS / 1000f);
-        if (frm < 10) {
-            res.append("0");
-        }
-        res.append(frm);
+        res.append(String.format("%02d", min));
+        res.append(":");
+
+        res.append(String.format("%02d", sec));
+        res.append(":");
+
+        int frm = Math.round(milli * fps / 1000f);
+
+        res.append(String.format("%02d", frm));
         return res.toString();
     }
 

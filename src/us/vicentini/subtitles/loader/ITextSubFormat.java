@@ -1,3 +1,4 @@
+package us.vicentini.subtitles.loader;
 /*
  * AbstractTextSubFormat.java
  *
@@ -20,13 +21,17 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
-package us.vicentini.subtitles.loader;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import us.vicentini.subtitles.model.SubEntry;
 import us.vicentini.subtitles.model.Subtitle;
 
@@ -36,21 +41,22 @@ import us.vicentini.subtitles.model.Subtitle;
  */
 public abstract class ITextSubFormat extends SubFormat {
 
-    protected static final String nl = "\\\n";
-    protected static final String sp = "[ \\t]*";
-    protected Subtitle subtitle_list;
+    protected static final String NEW_LINE_PATTERN = "\\\n";
+    protected static final String SPACE_PATTERN = "[ \\t]*";
+    
+    protected Subtitle subtitleList;
 
-    /*
-     * Initialization functions
+    /**
+     * Initialization functions.
      */
-    private void setFPS(float FPS) {
-        this.FPS = FPS;
+    private void setFps(float fps) {
+        this.FPS = fps;
     }
 
     /*
      * Loading functions
      */
-    protected abstract SubEntry getSubEntry(Matcher m);
+    protected abstract SubEntry getSubEntry(Matcher matcher);
 
     protected abstract Pattern getPattern();
 
@@ -69,24 +75,24 @@ public abstract class ITextSubFormat extends SubFormat {
             if (!getTestPattern().matcher(input).find()) {
                 return null;    // Not valid - test pattern does not match
             }
-            subtitle_list = new Subtitle();
-            setFPS(FPS);
+            subtitleList = new Subtitle();
+            setFps(FPS);
             input = initLoader(input);
 
-            Matcher m = getPattern().matcher(input);
+            Matcher matcher = getPattern().matcher(input);
             SubEntry entry;
-            while (m.find()) {
-                entry = getSubEntry(m);
+            while (matcher.find()) {
+                entry = getSubEntry(matcher);
                 if (entry != null) {
-                    subtitle_list.add(entry);
+                    subtitleList.add(entry);
                 }
             }
-            if (subtitle_list.isEmpty()) {
+            if (subtitleList.isEmpty()) {
                 return null;
             }
-            return subtitle_list;
-        } catch (Exception e) {
-            e.printStackTrace();
+            return subtitleList;
+        } catch (Exception ex) {
+            ex.printStackTrace();
             return null;
         }
     }

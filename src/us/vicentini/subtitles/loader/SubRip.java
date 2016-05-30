@@ -39,8 +39,8 @@ public class SubRip extends StyledTextSubFormat {
 
     static {
         pat = Pattern.compile(
-                "(?s)(\\d+)" + sp + nl + "(\\d\\d):(\\d\\d):(\\d\\d),(\\d\\d\\d)" + sp + "-->"
-                + sp + "(\\d\\d):(\\d\\d):(\\d\\d),(\\d\\d\\d)" + sp + "(X1:\\d.*?)??" + nl + "(.*?)" + nl + nl);
+                "(?s)(\\d+)" + SPACE_PATTERN + NEW_LINE_PATTERN + "(\\d\\d):(\\d\\d):(\\d\\d),(\\d\\d\\d)" + SPACE_PATTERN + "-->"
+                + SPACE_PATTERN + "(\\d\\d):(\\d\\d):(\\d\\d),(\\d\\d\\d)" + SPACE_PATTERN + "(X1:\\d.*?)??" + NEW_LINE_PATTERN + "(.*?)" + NEW_LINE_PATTERN + NEW_LINE_PATTERN);
 
     }
 

@@ -40,8 +40,8 @@ public class Main {
      */
     public static void main(String[] args) throws IOException {
         String inputEngPathFile = "input\\legenda.eng.srt";
-//        String inputPorPathFile = "input\\legenda.pob.srt";
-        String inputPorPathFile = "output\\legenda.eng.srt";
+        String inputPorPathFile = "input\\legenda.pob.srt";
+//        String inputPorPathFile = "output\\legenda.eng.srt";
         SubRip engSubFormat = new SubRip();
         Subtitle engSub = engSubFormat.parse(fileRead(inputEngPathFile));
 
@@ -51,6 +51,6 @@ public class Main {
 //        synchronizedSub.split(new SubEntry());
 //        engSub.applyCorrection(1, 1000);
 //        System.out.println(engSub.toString());
-//        engSubFormat.produce(engSub, new File("output\\legenda.eng.srt"));
+        engSubFormat.produce(engSub, new File("output\\legenda.eng.srt"));
     }
 }
