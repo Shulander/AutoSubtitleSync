@@ -1,4 +1,4 @@
-package us.vicentini.utils;
+package us.vicentini.subtitles.util;
 
 import java.io.FileInputStream;
 import java.nio.MappedByteBuffer;

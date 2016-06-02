@@ -1,18 +1,19 @@
 package us.vicentini.subtitles;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.charset.Charset;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.xml.DOMConfigurator;
 
 import us.vicentini.subtitles.loader.SubRip;
-import us.vicentini.subtitles.model.SubEntry;
 import us.vicentini.subtitles.model.Subtitle;
 import us.vicentini.subtitles.sync.BasicSyncSubtitles;
-import us.vicentini.subtitles.sync.SyncSubtitles;
+import us.vicentini.subtitles.util.FileUtils;
 import us.vicentini.subtitles.util.SubtitlesUtil;
+
 
 /**
  *
@@ -20,36 +21,29 @@ import us.vicentini.subtitles.util.SubtitlesUtil;
  */
 public class Main {
 
-    public static String fileRead(String filePath) throws java.io.IOException {
-        FileInputStream stream = new FileInputStream(new File(filePath));
-        FileChannel fc = stream.getChannel();
-        try {
-            MappedByteBuffer bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
-            /*
-             * Instead of using default, pass in a decoder.
-             */
-            String returnValue = Charset.defaultCharset().decode(bb).toString();
-            returnValue = returnValue.replaceAll("\\\r\\\n", "\\\n");
-            return returnValue;
-        } finally {
-            fc.close();
-            stream.close();
-        }
+    private final static Log log = LogFactory.getLog(us.vicentini.subtitles.Main.class);
 
+    static {
+        if ((new File("config/log4j.xml")).exists()) {
+            DOMConfigurator.configure("config/log4j.xml");
+        } else if ((new File("config/log4j.properties")).exists()) {
+            PropertyConfigurator.configure("config/log4j.properties");
+        }
     }
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
+        log.info("started");
         String inputEngPathFile = "input\\legenda.eng.srt";
         String inputPorPathFile = "input\\legenda.pob.srt";
 //        String inputPorPathFile = "output\\legenda.eng.srt";
         SubRip engSubFormat = new SubRip();
-        Subtitle engSub = engSubFormat.parse(fileRead(inputEngPathFile));
+        Subtitle engSub = engSubFormat.parse(FileUtils.fileRead(inputEngPathFile));
 
         SubRip porSubFormat = new SubRip();
-        Subtitle porSub = porSubFormat.parse(fileRead(inputPorPathFile));
+        Subtitle porSub = porSubFormat.parse(FileUtils.fileRead(inputPorPathFile));
 
         double original = SubtitlesUtil.compareSubtitles(engSub, porSub);
 
@@ -74,7 +68,7 @@ public class Main {
                         tmpValue = SubtitlesUtil.compareSubtitles(engSub, tmpSub);
                         if (tmpValue > compareValue) {
                             if (tmpValue > original) {
-                                System.out.println("new improovment compared with started value: "
+                                log.info("new improovment compared with started value: "
                                     + String.format("%.2f", tmpValue * 100) + " > "
                                     + String.format("%.2f", compareValue * 100));
                                 compareValue = tmpValue;
@@ -90,10 +84,11 @@ public class Main {
             porSubFormat.produce(newSub, new File("output\\legenda.por2.srt"));
         }
 
-        System.out.println("compareTo: " + SubtitlesUtil.compareSubtitles(engSub, porSub));
+        log.info("compareTo: " + SubtitlesUtil.compareSubtitles(engSub, porSub));
 //        synchronizedSub.split(new SubEntry());
 //        engSub.applyCorrection(1, 1000);
 //        System.out.println(engSub.toString());
         engSubFormat.produce(engSub, new File("output\\legenda.eng.srt"));
+        log.info("finished");
     }
 }
