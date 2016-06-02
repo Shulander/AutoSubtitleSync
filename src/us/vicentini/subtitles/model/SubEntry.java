@@ -90,7 +90,7 @@ public class SubEntry implements Comparable<SubEntry> {
     }
     
     public int deltaTime() {
-        return getFinishTime().getMsecs() - getStartTime().getMsecs();
+        return Math.round(getFinishTime().getMsecs() - getStartTime().getMsecs());
     }
 
     @Override

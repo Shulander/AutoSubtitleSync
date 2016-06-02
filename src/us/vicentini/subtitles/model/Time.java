@@ -6,7 +6,7 @@ package us.vicentini.subtitles.model;
  */
 public class Time implements Comparable<Time>, Cloneable {
 
-    protected float msecs = -1;
+    protected double msecs = -1;
     public static final int MAX_TIME = 3600 * 24;   // in seconds
     public static final int MAX_MILLI_TIME = MAX_TIME * 1000;   // in seconds
 
@@ -14,7 +14,7 @@ public class Time implements Comparable<Time>, Cloneable {
 
     }
 
-    public int getMsecs() {
+    public long getMsecs() {
         return Math.round(msecs);
     }
 
@@ -91,8 +91,8 @@ public class Time implements Comparable<Time>, Cloneable {
 
         int time;
         int milli;
-        milli = getMsecs() % 1000;
-        time = getMsecs() / 1000;
+        milli = (int) (getMsecs() % 1000);
+        time = (int) (getMsecs() / 1000);
 
         int sec;
         sec = time % 60;
@@ -121,9 +121,9 @@ public class Time implements Comparable<Time>, Cloneable {
     public String getSecondsFrames(float fps) {
         int time;
         int milli;
-        milli = getMsecs() % 1000;
+        milli = (int) (getMsecs() % 1000);
 
-        time = getMsecs() / 1000;
+        time = (int) (getMsecs() / 1000);
         int sec;
         sec = time % 60;
 
@@ -151,7 +151,7 @@ public class Time implements Comparable<Time>, Cloneable {
     }
 
     public String getFrames(float FPS) {
-        return Integer.toString((int) Math.round(toSeconds() * FPS));
+        return String.format("%d", Math.round(toSeconds() * FPS));
     }
 
     public double toSeconds() {
@@ -164,7 +164,7 @@ public class Time implements Comparable<Time>, Cloneable {
     }
 
     public void applyCorrection(double angular, double linear) {
-        msecs = (int) Math.round(msecs * angular + linear);
+        msecs = msecs * angular + linear;
     }
 
     @Override

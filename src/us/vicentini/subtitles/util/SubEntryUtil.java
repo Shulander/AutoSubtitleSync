@@ -20,8 +20,8 @@ public class SubEntryUtil {
      * @return return the union time between the SubEntry objects in milliseconds
      */
     public static long calculateUnionTime(SubEntry entryA, SubEntry entryB) {
-        int start = entryA.getStartTime().getMsecs();
-        int end = entryA.getFinishTime().getMsecs();
+        long start = entryA.getStartTime().getMsecs();
+        long end = entryA.getFinishTime().getMsecs();
 
         if (end < entryB.getFinishTime().getMsecs()) {
             end = entryB.getFinishTime().getMsecs();
@@ -38,8 +38,8 @@ public class SubEntryUtil {
      * @return return the intersection time between the SubEntry objects in milliseconds
      */
     public static long calculateIntersectionTime(SubEntry entryA, SubEntry entryB) {
-        int start = entryB.getStartTime().getMsecs();
-        int end = entryA.getFinishTime().getMsecs();
+        long start = entryB.getStartTime().getMsecs();
+        long end = entryA.getFinishTime().getMsecs();
 
         if (end > entryB.getFinishTime().getMsecs()) {
             end = entryB.getFinishTime().getMsecs();
